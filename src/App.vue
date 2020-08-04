@@ -1,28 +1,31 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="router-block">
+      <router-view></router-view>
+    </div>
+    <main-tab-bar></main-tab-bar>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MainTabBar from 'components/content/maintabbar/MainTabBar'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    MainTabBar
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped lang="scss">
+  @import "assets/css/normalize.css";
+  *{
+    box-sizing: border-box;
+  }
+  .router-block {
+    width: calc(100% - 200px);
+    border: 1px solid red;
+    margin-left: 200px;
+  }
 </style>
