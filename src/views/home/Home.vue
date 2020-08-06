@@ -1,63 +1,41 @@
 <template>
   <div class="vedio-block">
-    <div v-for="item in vediotwo[0]" :key="item.index" class="vedio-item">
+    <div v-for="item in vediotwo[type]" :key="item.index" class="vedio-item">
       <img :src="item.snippet.thumbnails.high.url" alt srcset />
       <div class="title">{{item.snippet.title}}</div>
+      <div
+        class="love"
+        @click="loveClick(item.contentDetails.videoId)"
+        :class="{active: love(item.contentDetails.videoId)}"
+      >
+        <img src="~assets/img/icon-nolove.png" alt />
+      </div>
     </div>
-    <bookmark :markNum="markNum"></bookmark>
+    <bookmark :markNum="markNum" @tabClick="tabClick"></bookmark>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 
-import Bookmark from "components/common/bookmark/Bookmark"
+import Bookmark from "components/common/bookmark/Bookmark";
 
 export default {
   name: "Home",
   components: {
-    Bookmark
-    
+    Bookmark,
   },
   data() {
     return {
       vedios: [],
       vediotwo: [],
-      markNum: ''
+      markNum: null,
+      type: 0,
+      favorites: [],
     };
   },
 
   created() {
-    // axios
-    //   .get("https://www.googleapis.com/youtube/v3/playlistItems", {
-    //     params: {
-    //       part: "snippet,contentDetails", // 必填，把需要的資訊列出來
-    //       playlistId: "UUMUnInmOkrWN4gof9KlhNmQ", // 播放清單的id
-    //       maxResults: 50, // 預設為五筆資料，可以設定1~50
-    //       key: "AIzaSyCyvYJPKiivJIGcf2G77E2GRJSaDSaevO8",
-    //     },
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data.nextPageToken);
-    //     this.vedios = res.data.items;
-    //   })
-    //   .catch((e) => console.log(e));
-    // axios
-    //   .get("https://www.googleapis.com/youtube/v3/playlistItems", {
-    //     params: {
-    //       part: "snippet,contentDetails", // 必填，把需要的資訊列出來
-    //       playlistId: "UUMUnInmOkrWN4gof9KlhNmQ", // 播放清單的id
-    //       maxResults: 50, // 預設為五筆資料，可以設定1~50
-    //       key: "AIzaSyCyvYJPKiivJIGcf2G77E2GRJSaDSaevO8",
-    //       pageToken: 'CDIQAA'
-    //     },
-    //   })
-    //   .then((res) => {
-    //     // console.log(res.data.nextPageToken);
-    //     this.vediotwo = res.data.items;
-
-    //   })
-    //   .catch((e) => console.log(e));
     function data() {
       return axios.get("https://www.googleapis.com/youtube/v3/playlistItems", {
         params: {
@@ -93,16 +71,53 @@ export default {
         }
         let newArr = sliceArray(this.vedios, 12);
         this.vediotwo = newArr;
-        this.markNum = this.vediotwo.length
+        this.markNum = this.vediotwo.length;
       })
     );
+
+  },
+  mounted() {
+    this.favorites = JSON.parse(localStorage['favorites'])
+    
   },
 
-  methods: {},
+  methods: {
+    tabClick(index) {
+      this.type = index;
+    },
+    loveClick(id) {
+      console.log(id);
+      // console.log(key)
+      if (this.favorites.indexOf(id) !== -1) {
+        for (let i = 0; i < this.favorites.length; i++) {
+          if (this.favorites[i] === id) {
+            console.log("陣列內有相同的值");
+            var theDoubleOneIndex = this.favorites.indexOf(this.favorites[i]); //找到某物件的位置
+            this.favorites.splice(theDoubleOneIndex, 1); //刪除陣列本身的相同物件
+          }
+        }
+      } else {
+        this.favorites.push(id);
+      }
+      localStorage['favorites'] = JSON.stringify(this.favorites)
+
+
+      console.log(this.favorites);
+    },
+    love(id) {
+      if (this.favorites.indexOf(id) !== -1) {
+        return true;
+      }
+    },
+  },
+  watch: {},
 };
 </script>
 
 <style scoped lang="scss">
+.active {
+  background-color: red;
+}
 .vedio-block {
   display: flex;
   flex-direction: row;
@@ -113,8 +128,19 @@ export default {
 .vedio-item {
   width: calc(25% - 20px);
   margin-bottom: 30px;
+  position: relative;
   img {
     width: 100%;
+  }
+  .love {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.2);
+      translate: 0.2s;
+    }
   }
 }
 @media all and(max-width: 991px) {

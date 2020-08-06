@@ -1,6 +1,6 @@
 <template>
   <div class="bookmark">
-    <div class="bookmark-item" v-for="item in markNum" :key="item.index">
+    <div class="bookmark-item" v-for="(item, index) in markNum" :key="item.index" @click="clickItme(index)">
       {{item}}
     </div>
   </div>
@@ -12,7 +12,17 @@ export default {
   props: {
     markNum: {
       type: Number,
-
+    }
+  },
+  data() {
+    return {
+      currentIndex: 0
+    }
+  },
+  methods: {
+    clickItme(index) {
+      console.log(index)
+      this.$emit('tabClick', index)
     }
   }
 }
@@ -30,6 +40,11 @@ export default {
       width: 60px;
       height: 60px;
       border: 1px solid green;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 3px;
+      cursor: pointer;
     }
   }
 </style>
