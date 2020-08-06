@@ -1,11 +1,11 @@
 <template>
   <div class="vedio-block">
-    <div v-for="item in vediotwo[type]" :key="item.index" class="vedio-item">
+    <div v-for="item in vediotwo[type]" :key="item.index" class="vedio-item" @click="goMovie(item)">
       <img :src="item.snippet.thumbnails.high.url" alt srcset />
       <div class="title">{{item.snippet.title}}</div>
       <div
         class="love"
-        @click="loveClick(item.contentDetails.videoId)"
+        @click.stop="loveClick(item.contentDetails.videoId)"
         :class="{active: love(item.contentDetails.videoId)}"
       >
         <img src="~assets/img/icon-nolove.png" alt />
@@ -109,6 +109,10 @@ export default {
         return true;
       }
     },
+    goMovie(item) {
+      this.$router.replace('vedio')
+      localStorage['vedio'] =  JSON.stringify(item)
+    }
   },
   watch: {},
 };
@@ -129,6 +133,7 @@ export default {
   width: calc(25% - 20px);
   margin-bottom: 30px;
   position: relative;
+  cursor: pointer;
   img {
     width: 100%;
   }

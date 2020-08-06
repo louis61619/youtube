@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 
 const Home = () => import('views/home/Home')
 const Favorites = () => import('views/favorites/Favorites')
-
+const Vedio = () => import('views/vedio/Vedio')
 
 //1.安裝插件
 Vue.use(VueRouter)
@@ -23,6 +23,10 @@ const routes = [
   {
     path: '/favorites',
     component: Favorites
+  },
+  {
+    path: '/vedio',
+    component: Vedio
   }
 ]
 
